@@ -1,5 +1,5 @@
 applications:
-- path: JavaHelloWorldApp.war
+- path: FashionDashboard.war
   memory: 512M
   instances: 1
   domain: eu-gb.mybluemix.net

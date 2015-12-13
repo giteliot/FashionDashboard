@@ -8,11 +8,15 @@
 	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-	<h1>Fashion Dashboard</h1>
+	<script src="js/facebook.js"></script>
+	<h1 id="titleDash">Burton Analytics</h1>
 	<button class="btn btn-block header-btn" onclick="doLogout()">Logout</button>
+	<div class="content">
+	<fb:login-button id="fbLogin" style="position:fixed; top:1.7em; right:1.5em; padding-left:5%;" scope="public_profile,email" onlogin="checkLoginState();">
+		</fb:login-button>
 	<hr>
 	<div id="loginPage" class="toHide">
-		<button class="btn" onclick="doLogin()">Login with Facebook</button>
+		<!--  <button class="btn" onclick="doLogin('')">Login with Facebook</button>	-->	
 	</div>
 	<div id="dashPage" class="toHide">
 	<div class="row dash-row">
@@ -25,7 +29,7 @@
 	</div>
 	<div class="row dash-row">
 		<div id="dash3" class="dash col-md-12 col-sm-12 col-xs-12">
-			brandwar dashboard bitchez
+			brandwar dashboard !
 		</div>
 	</div>
 	</div>
@@ -34,7 +38,8 @@
 	</div>
 	<div id="keyPage" class="toHide">
 	</div>
-	
+	</div>
 	<script src="js/index.js"></script>
+
 </body>
 </html>

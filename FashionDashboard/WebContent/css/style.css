@@ -112,3 +112,14 @@ label-input {
 	padding-left: 44%;
 }
 
+.content {
+
+	height:100vh;
+	background-repeat: no-repeat;
+	background: url('../images/background.jpg') no-repeat; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
