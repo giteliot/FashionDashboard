@@ -7,6 +7,24 @@
   	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-  
+  	<servlet>
+		<servlet-name>SentimentAnalysisServlet</servlet-name>
+		<servlet-class>com.ibm.cloudoe.samples.SentimentAnalysis</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>KeywordAnalysisServlet</servlet-name>
+		<servlet-class>com.ibm.cloudoe.samples.KeywordAnalysis</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>KeywordAnalysisServlet</servlet-name>
+		<url-pattern>/keyword</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SentimentAnalysisServlet</servlet-name>
+		<url-pattern>/sentiment</url-pattern>
+	</servlet-mapping>
+	
 
 </web-app>
