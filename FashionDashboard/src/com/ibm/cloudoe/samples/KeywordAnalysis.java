@@ -1,16 +1,27 @@
 package com.ibm.cloudoe.samples;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +40,17 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.util.TextUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.html.HTMLUListElement;
 
 import com.alchemyapi.api.AlchemyAPI;
+import com.alchemyapi.api.AlchemyAPI_ConceptParams;
+import com.alchemyapi.api.AlchemyAPI_KeywordParams;
+import com.alchemyapi.api.AlchemyAPI_Params;
+import com.alchemyapi.api.AlchemyAPI_TargetedSentimentParams;
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
 
@@ -111,7 +129,12 @@ public class KeywordAnalysis extends HttpServlet {
 			AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromString(alchemyKey);
 			//logger.log(Level.SEVERE, "Chiamo alchemy su "+tag+" con corpus: "+tweetsStr);
 			//Document doc = alchemyObj.TextGetTargetedSentiment(tweetsStr, tag);
-			Document doc = alchemyObj.TextGetTextSentiment(tweetsStr);
+			
+			AlchemyAPI_ConceptParams params = new AlchemyAPI_ConceptParams();
+			//params.setKeywordExtractMode("strict"); //tentative :s
+			//params.setMaxRetrieve(5);
+			
+			Document doc = alchemyObj.TextGetRankedConcepts(tweetsStr, params);
 			String outputStr = getStringFromDocument(doc);
 
 			ServletOutputStream servletOutputStream = resp.getOutputStream();
