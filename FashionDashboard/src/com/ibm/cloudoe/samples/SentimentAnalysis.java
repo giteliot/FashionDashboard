@@ -32,7 +32,6 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
-import com.alchemyapi.api.AlchemyAPI;
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
 
@@ -44,8 +43,7 @@ public class SentimentAnalysis extends HttpServlet {
 	private static Logger logger = Logger.getLogger(SentimentAnalysis.class.getName());
 	private static final long serialVersionUID = 1L;
 	
-	private static final int NUM_TWEETS = 100;
-	private static final long MAX_TWEETS = 500;
+	private static final int NUM_TWEETS = 500;
 	private String serviceName = "IBM Insights for Twitter-vj";
 	// If running locally complete the variables below
 	// with the information in VCAP_SERVICES
@@ -53,12 +51,11 @@ public class SentimentAnalysis extends HttpServlet {
 	private String username = "0b78b26b-8a5c-4076-bfa7-fa0a595b98ad";
 	private String password = "XNzv9gKrvl";
 	
-	private String alchemyKey = "8176235156ba22f3fbf93e61b686f28793dc42f8";
+//	private String alchemyKey = "8176235156ba22f3fbf93e61b686f28793dc42f8";
 	
 	
     public SentimentAnalysis() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -69,55 +66,68 @@ public class SentimentAnalysis extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		// create the request
 		String tag = req.getParameter("tag");
+		String split = req.getParameter("split");
 		
 		try {
 			HttpResponse httpResponse;
+			JSONObject sentiment = new JSONObject();
 			JSONObject jsonResp;
 			long countRes = 0, from = 0;
-			String tweetsStr = "", tmpStrTweet = "", toWriteTweet = "";
 			JSONArray tweetsArr;
-			JSONObject tmpTweet;
 			
 			//conto quanti tweet ci sono contenti tag
-			httpResponse = callTwitterInsights("count",tag);
+			httpResponse = callTwitterInsights("count", tag);
 			jsonResp = EntityToJSON(httpResponse.getEntity());
 			countRes = (long)((JSONObject) jsonResp.get("search")).get("results");
+			
 			logger.log(Level.INFO, "Conto "+countRes+" tweet");
 			if (countRes > 0) {
 				from = 0;
 				if (countRes > NUM_TWEETS)
 					from = countRes-NUM_TWEETS;
+				
 				//recupero i tweet e li metto nel file tweets.txt
-				httpResponse = callTwitterInsights("search",tag,from);
+				httpResponse = callTwitterInsights("search", tag, from);
 				jsonResp = EntityToJSON(httpResponse.getEntity());
 								
 				tweetsArr = (JSONArray) jsonResp.get("tweets");
-				tmpTweet = new JSONObject();
-				toWriteTweet += "<b>Tweets from "+((String) ((JSONObject) ((JSONObject) tweetsArr.get(0)).get("message")).get("postedTime")).substring(0, 10)+" to "
-						+ ""+((String) ((JSONObject) ((JSONObject) tweetsArr.get(tweetsArr.size()-1)).get("message")).get("postedTime")).substring(0, 10)+"</b><br>";
 				
-				for (int k = 0; k < tweetsArr.size(); k++) {
-					tmpTweet = (JSONObject) tweetsArr.get(k);
-					tmpStrTweet = (String) ((JSONObject) tmpTweet.get("message")).get("body");
-					tweetsStr += " "+tmpStrTweet;
-					toWriteTweet += "\n-> "+tmpStrTweet;
+				double positive = 0;
+				double negative = 0;
+				double ambivalent = 0;
+				double neutral = 0;
+				
+				for ( int k = 0; k < tweetsArr.size(); k++) {
+					String tmpStrTweet = "";
+					JSONObject jsonTweet = new JSONObject();
+					jsonTweet = (JSONObject)tweetsArr.get(k);
+					try {
+						tmpStrTweet = (String)((JSONObject) ((JSONObject) ((JSONObject)jsonTweet.get("cde")).get("content")).get("sentiment")).get("polarity");
+						
+						switch (tmpStrTweet) {
+							case "POSITIVE": positive +=1; break;
+							case "NEGATIVE": negative +=1; break;
+							case "AMBIVALENT": ambivalent +=1; break;
+							case "NEUTRAL": neutral +=1; break;
+							default:
+								break;
+						}
+							
+					}catch (Exception e){
+						logger.log(Level.SEVERE, "Tweet error: " + e.getMessage(), e);
+					}
 				}
+				sentiment.put("positive", positive/tweetsArr.size());
+				sentiment.put("negative", negative/tweetsArr.size());
+				sentiment.put("neutral", neutral/tweetsArr.size());
+				sentiment.put("ambivalent", ambivalent/tweetsArr.size());
+				
 			} else {
 				logger.log(Level.SEVERE, "WARNING: No tweet found");
 			}
-			//resp.setStatus(httpResponse.getStatusLine().getStatusCode());
-			String filePath = req.getSession().getServletContext().getRealPath("tweets");
-			writeTweetsToFile(toWriteTweet, filePath);
-			
-			//chiamo alchemy usando come test i tweet e come target tag
-			AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromString(alchemyKey);
-			//logger.log(Level.SEVERE, "Chiamo alchemy su "+tag+" con corpus: "+tweetsStr);
-			//Document doc = alchemyObj.TextGetTargetedSentiment(tweetsStr, tag);
-			Document doc = alchemyObj.TextGetTextSentiment(tweetsStr);
-			String outputStr = getStringFromDocument(doc);
 
 			ServletOutputStream servletOutputStream = resp.getOutputStream();
-			servletOutputStream.print(outputStr);
+			servletOutputStream.print(sentiment.serialize());
 			servletOutputStream.flush();
 			servletOutputStream.close();
 
@@ -162,6 +172,7 @@ public class SentimentAnalysis extends HttpServlet {
 			HttpResponse httpResponse  = response.returnResponse();
 		return httpResponse;
 	}
+	
 	
 	private HttpResponse callTwitterInsights(String type, String keyword) throws URISyntaxException, ClientProtocolException, IOException {
 		String qUrl = baseURL+"/api/v1/messages/"+type+"?q="+URLEncoder.encode(keyword,"UTF-8");
