@@ -28,7 +28,6 @@ h1 {
 }
 
 .loading {
-	padding-left: 44%;
 	padding-top: 3.5em;
 }
 
@@ -81,7 +80,7 @@ label-input {
 	height: 14em;
 	margin-top: 1em;
 	text-align: center;
-	border: 1px solid #38b8ea;
+	/*border: 1px solid #38b8ea;*/
 }
 
 .dash:hover {
@@ -121,5 +120,49 @@ label-input {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+.subtitle-dash {
+	font-weight: bold;
+	padding-bottom:2em;
+}
+
+.row-keywords {
+	padding-top: 1em;
+	
+}
+
+#keyword0 {
+	font-size: xx-large;
+	font-weight: bold;
+	color: blue;
+}
+
+#keyword1 {
+	font-size: large;
+	font-weight: bold;
+	color: #006fff;
+}
+
+#keyword2 {
+	font-size: large;
+	font-weight: normal;
+	color: #00a2ff;
+}
+
+#keyword3 {
+	font-size: medium;
+	font-weight: bold;
+	color: #1695ff;
+	margin-left: 150px;
+}
+
+#keyword4 {
+	font-size: small;
+	font-weight: bold;
+	color: #0095ff;
+	margin-top: -20px;
+	margin-left: 10px;
+	
 }
 
