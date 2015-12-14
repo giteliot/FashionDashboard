@@ -16,30 +16,72 @@
 		</fb:login-button>
 	<hr>
 	<div id="loginPage" class="toHide">
-		<!--  <button class="btn" onclick="doLogin('')">Login with Facebook</button>	-->	
+		<button class="btn" onclick="doLogin('')">Login with Facebook</button>
 	</div>
 	<div id="dashPage" class="toHide">
 	<div class="row dash-row">
-		<div id="dash1" class="dash col-md-6 col-sm-6 col-xs-12" onclick="showSentimentDetail()">
-			sentiment over time dashbard
+		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12" onclick="showSentimentDetail()">
+			<div class="results" id="result1">
+				sentiment over time dashbard
+			</div>
+			
+			<div class="loading" id="loading1">
+			<img src="images/twitter_flapping.gif" height="84px" width="112px">
+			</div>
 		</div>
-		<div id="dash2" class="dash col-md-6 col-sm-6 col-xs-12">
-			key concepts (over time?)
+		<div id="dash2" class="dash col-md-7 col-sm-7 col-xs-12" onclick="showSentimentDetail()">
+		<div class="results" id="result2">
+			<span class="subtitle-dash">key concepts</span>
+			<div class="row row-keywords">
+				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword1"></div>
+				<div class="col-md-4 col-sm-4 col-xs-4"></div>
+				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword2"></div>
+			</div>	
+			<div class="row row-keywords">
+				<div class="col-md-4 col-sm-4 col-xs-4"></div>
+				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword0"></div>
+				<div class="col-md-4 col-sm-4 col-xs-4"></div>
+			</div>	
+			<div class="row row-keywords">
+				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword4"></div>
+				<div class="col-md-4 col-sm-4 col-xs-4"></div>
+				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword3"></div>
+			</div>
+		</div>	
+			<div class="loading" id="loading2">
+			<img src="images/twitter_flapping.gif" height="84px" width="112px">
+			</div>
+		
 		</div>
 	</div>
 	<div class="row dash-row">
-		<div id="dash3" class="dash col-md-12 col-sm-12 col-xs-12">
-			brandwar dashboard !
+		<div id="dash3" class="dash col-md-12 col-sm-12 col-xs-12" onclick="showSentimentDetail()">
+		<div class="results" id="result3">
+			brandwar
+		</div>	
+			<div class="loading" id="loading3">
+			<img src="images/twitter_flapping.gif" height="84px" width="112px">
+			</div>
 		</div>
 	</div>
 	</div>
-	<div id="sentPage" class="toHide">
-		CAN YOU FEEL THE SENTIMENT ALREADY!?!??!
+	<div id="brandPage" class="toHide">
+		<div class="row" style="padding-top: 8em; padding-left: 44%;">
+		<img src="images/progress.png" height="256px" width="256px">
+		</div>
 	</div>
 	<div id="keyPage" class="toHide">
+		<div class="row" style="padding-top: 8em; padding-left: 44%;">
+		<img src="images/progress.png" height="256px" width="256px">
+		</div>
+	</div>
+	<div id="sentPage" class="toHide">
+		<div class="row" style="padding-top: 8em; padding-left: 44%;">
+		<img src="images/progress.png" height="256px" width="256px">
+		</div>
 	</div>
 	</div>
 	<script src="js/index.js"></script>
-
+	<script src="js/xml2json.js"></script>
 </body>
 </html>
