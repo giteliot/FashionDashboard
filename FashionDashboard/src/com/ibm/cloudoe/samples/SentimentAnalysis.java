@@ -1,11 +1,16 @@
 package com.ibm.cloudoe.samples;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,11 +20,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,7 +30,6 @@ import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.util.EntityUtils;
-import org.w3c.dom.Document;
 
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
@@ -92,62 +91,56 @@ public class SentimentAnalysis extends HttpServlet {
 								
 				tweetsArr = (JSONArray) jsonResp.get("tweets");
 				
-				double positive = 0;
-				double negative = 0;
-				double ambivalent = 0;
-				double neutral = 0;
+				Object[] tweetsArray = (Object[]) tweetsArr.toArray();
 				
-				for ( int k = 0; k < tweetsArr.size(); k++) {
-					String tmpStrTweet = "";
-					JSONObject jsonTweet = new JSONObject();
-					jsonTweet = (JSONObject)tweetsArr.get(k);
-					try {
-						tmpStrTweet = (String)((JSONObject) ((JSONObject) ((JSONObject)jsonTweet.get("cde")).get("content")).get("sentiment")).get("polarity");
-						
-						switch (tmpStrTweet) {
-							case "POSITIVE": positive +=1; break;
-							case "NEGATIVE": negative +=1; break;
-							case "AMBIVALENT": ambivalent +=1; break;
-							case "NEUTRAL": neutral +=1; break;
-							default:
-								break;
-						}
-							
-					}catch (Exception e){
-						logger.log(Level.SEVERE, "Tweet error: " + e.getMessage(), e);
+				int chunkSize = 5;
+				if (split != null)
+					chunkSize = Integer.parseInt(split);
+				
+				Object[][] splittedArrray = SentimentAnalysis.chunkArray(tweetsArray, chunkSize);
+				
+				ArrayList<JSONObject> sentiments = (ArrayList<JSONObject>) SentimentAnalysis.processInputs(splittedArrray);
+				
+				ServletOutputStream servletOutputStream = resp.getOutputStream();
+				
+				if (split != null){
+					tweetsArr = new JSONArray();
+					tweetsArr.addAll(sentiments);
+					servletOutputStream.print(tweetsArr.serialize());
+				}else{
+					double pos = 0, neg = 0, amb = 0, neu = 0;
+					for (JSONObject s : sentiments){
+						pos += (double) s.get("positive");
+						neg += (double) s.get("negative");
+						amb += (double) s.get("ambivalent");
+						neu += (double) s.get("neutral");
 					}
+					sentiment = new JSONObject();
+					sentiment.put("positive", pos/sentiments.size());
+					sentiment.put("negative", neg/sentiments.size());
+					sentiment.put("neutral", neu/sentiments.size());
+					sentiment.put("ambivalent", amb/sentiments.size());
+					
+					servletOutputStream.print(sentiment.serialize());
 				}
-				sentiment.put("positive", positive/tweetsArr.size());
-				sentiment.put("negative", negative/tweetsArr.size());
-				sentiment.put("neutral", neutral/tweetsArr.size());
-				sentiment.put("ambivalent", ambivalent/tweetsArr.size());
+				
+				servletOutputStream.flush();
+				servletOutputStream.close();
+				
 				
 			} else {
 				logger.log(Level.SEVERE, "WARNING: No tweet found");
 			}
 
-			ServletOutputStream servletOutputStream = resp.getOutputStream();
-			servletOutputStream.print(sentiment.serialize());
-			servletOutputStream.flush();
-			servletOutputStream.close();
+			
+			
 
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Service error: " + e.getMessage(), e);
 			resp.setStatus(HttpStatus.SC_BAD_GATEWAY);
 		}
 	}
-
-	private String formatTag(String tag) {
-		tag = tag.toLowerCase();
-		while (tag.contains("  ")) {
-			tag.replace("  ", " ");
-		}
-		String[] words = tag.split(" ");
-		if (words[0].equalsIgnoreCase(words[1])) {
-			tag = words[0];
-		}
-		return tag;
-	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -155,6 +148,79 @@ public class SentimentAnalysis extends HttpServlet {
 		
 		doGet(req, resp);
 		
+	}
+	
+	public static Object[][] chunkArray(Object[] array, int chunkSize) {
+        int numOfChunks = (int)Math.ceil((double)array.length / chunkSize);
+        Object[][] output = new Object[numOfChunks][];
+
+        for(int i = 0; i < numOfChunks; ++i) {
+            int start = i * chunkSize;
+            int length = Math.min(array.length - start, chunkSize);
+
+            Object[] temp = new Object[length];
+            System.arraycopy(array, start, temp, 0, length);
+            output[i] = temp;
+        }
+
+        return output;
+    }
+	
+	public static List<JSONObject> processInputs(Object[][] splittedArrray)
+	        throws InterruptedException, ExecutionException {
+
+	    int threads = Runtime.getRuntime().availableProcessors();
+	    ExecutorService service = Executors.newFixedThreadPool(threads);
+
+	    List<Future<Object>> futures = new ArrayList<Future<Object>>();
+	    for (int i = 0; i < splittedArrray.length; i++) {
+			final Object[] input = splittedArrray[i];
+			Callable<Object> callable = new Callable<Object>() {
+	            public JSONObject call() throws Exception {
+	            	JSONObject output = new JSONObject();
+	                
+	            	double positive = 0;
+					double negative = 0;
+					double ambivalent = 0;
+					double neutral = 0;
+					
+					for (int j = 0; j < input.length; j++) {
+						JSONObject tweet = (JSONObject)input[j];
+						String tmpStrTweet = "";
+						try {
+							tmpStrTweet = (String)((JSONObject) ((JSONObject) ((JSONObject)tweet.get("cde")).get("content")).get("sentiment")).get("polarity");
+							
+							switch (tmpStrTweet) {
+								case "POSITIVE": positive +=1; break;
+								case "NEGATIVE": negative +=1; break;
+								case "AMBIVALENT": ambivalent +=1; break;
+								case "NEUTRAL": neutral +=1; break;
+								default:
+									break;
+							}
+								
+						}catch (Exception e){
+							logger.log(Level.SEVERE, "Tweet error: " + e.getMessage(), e);
+						}
+					}
+					output.put("positive", positive/input.length);
+					output.put("negative", negative/input.length);
+					output.put("neutral", neutral/input.length);
+					output.put("ambivalent", ambivalent/input.length);
+	            	
+	                return output;
+	            }
+	        };
+	        futures.add(service.submit(callable));
+		}
+
+	    service.shutdown();
+
+	    List<JSONObject> outputs = new ArrayList<JSONObject>();
+	    for (Future<Object> future : futures) {
+	        outputs.add((JSONObject) future.get());
+	    }
+	    return outputs;
 	}
 	
 	private HttpResponse callTwitterInsights(String type, String keyword, long from) throws URISyntaxException, ClientProtocolException, IOException {
@@ -187,22 +253,6 @@ public class SentimentAnalysis extends HttpServlet {
 	return httpResponse;
 	}
 	
-	private void writeTweetsToFile(String tweets, String contextPath) throws IOException {
-
-		String jsonFilePath = contextPath + "//savedTweets.txt";	
-		FileWriter file = new FileWriter(jsonFilePath);
-        try {
-            file.write(tweets);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            file.flush();
-            file.close();
-        }
-        
-	}
-
-	
 	private JSONObject EntityToJSON(HttpEntity entity) {
 		String s = "";
 		JSONObject persInsOutput = null; 
@@ -217,22 +267,6 @@ public class SentimentAnalysis extends HttpServlet {
 		return persInsOutput;
 	}
 	
-	 private static String getStringFromDocument(Document doc) {
-	        try {
-	            DOMSource domSource = new DOMSource(doc);
-	            StringWriter writer = new StringWriter();
-	            StreamResult result = new StreamResult(writer);
-
-	            TransformerFactory tf = TransformerFactory.newInstance();
-	            Transformer transformer = tf.newTransformer();
-	            transformer.transform(domSource, result);
-
-	            return writer.toString();
-	        } catch (TransformerException ex) {
-	            ex.printStackTrace();
-	            return null;
-	        }
-	    }
 	
 	@Override
 	public void init() throws ServletException {
