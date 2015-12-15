@@ -78,12 +78,20 @@ label-input {
 
 .dash {
 	height: 14em;
-	margin-top: 1em;
+	padding-top: 3em;
+	text-align: center;
+	/*border: 1px solid #38b8ea;*/
+}
+
+.dash-no-over {
+	height: 14em;
+	padding-top: 3em;
 	text-align: center;
 	/*border: 1px solid #38b8ea;*/
 }
 
 .dash:hover {
+	border-radius: 20px;
 	border: 2px solid #5EA9DD;
 }
 
@@ -123,6 +131,7 @@ label-input {
 }
 
 .subtitle-dash {
+	font-size: small;
 	font-weight: bold;
 	padding-bottom:2em;
 }
