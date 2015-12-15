@@ -91,8 +91,8 @@ label-input {
 }
 
 .dash:hover {
-	border-radius: 20px;
-	border: 2px solid #5EA9DD;
+	/*border-radius: 20px;
+	border: 2px solid #5EA9DD;*/
 }
 
 .dash-row {
@@ -101,11 +101,16 @@ label-input {
 }
 
 #dash1 {
+	text-align: left;
 }
 #dash2 {
+	margin-bottom: 4em;
 }
 #dash3: {
 	height:17em;
+}
+#dash4: {
+	padding-top:6em;
 }
 
 .header-btn {
@@ -175,3 +180,18 @@ label-input {
 	
 }
 
+#loading-bar {
+	position: relative;
+    top: -21px;
+    height: 10px;
+	background-color: #5EA9DD;
+}
+
+.brand-title {
+	font-size: large;
+	font-weight: bold;
+}
+
+.cool-color {
+	color: #5EA9DD;
+}

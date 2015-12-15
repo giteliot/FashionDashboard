@@ -215,7 +215,7 @@ public class SentimentAnalysis extends HttpServlet {
 					}
 					
 					AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromString(alchemyKey);
-					Document doc = alchemyObj.TextGetTargetedSentiment(tmpStrTweet, tag);
+					Document doc = alchemyObj.TextGetTextSentiment(tmpStrTweet);
 					
 					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 					Source xmlSource = new DOMSource(doc);

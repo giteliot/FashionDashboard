@@ -20,11 +20,18 @@
 	<div id="loginPage" class="toHide">
 		<button class="btn" onclick="doLogin('')">Login with Facebook</button>
 	</div>
-	<div id="dashPage" class="toHide">
+	<div id="loading-bar"></div>
+	<div id="dashPage" class="toHide container-fluid">
 	<div class="row dash-row">
 		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12" onclick="showSentimentDetail()">
 			<div class="results" id="result1">
-				<span class="subtitle-dash">BRANDWAR</span>
+				<span class="subtitle-dash">BRAND WAR</span>
+				<p></p>
+				<p class="brandwar-line"><span>1.</span> <span id="brandw1" class="brand-title cool-color">Burton</span></p>
+				<p class="brandwar-line"><span>2.</span> <span id="brandw2" class="brand-title cool-color">Billabong</span></p>
+				<p class="brandwar-line"><span>3.</span> <span id="brandw3" class="brand-title cool-color">Nitro</span></p>
+				<p class="brandwar-line"><span>4.</span> <span id="brandw4" class="brand-title cool-color">Airblaster</span></p>
+				<p class="brandwar-line"><span>5.</span> <span id="brandw5" class="brand-title cool-color">Vans</span></p>
 			</div>
 			
 			<div class="loading" id="loading1">
@@ -57,7 +64,7 @@
 		</div>
 	</div>
 	<div class="row dash-row">
-		<div id="dash3" class="dash-no-over col-md-12 col-sm-12 col-xs-12">
+		<div id="dash3" class="dash-no-over col-md-6 col-sm-6 col-xs-12">
 		<div class="results" id="result3">
 			<!--  <span class="subtitle-dash">SENTIMENT GRAPH</span>-->
 			 <div id="chart_sentiment" style="width: 600px; height: 300px"></div>
@@ -65,6 +72,18 @@
 			<div class="loading" id="loading3">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
+		</div>
+		<div id="dash4" class="dash-no-over col-md-6 col-sm-6 col-xs-12">
+			<div class="loading" id="loading4">
+			<img src="images/twitter_flapping.gif" height="84px" width="112px">
+			</div>
+			<div class="tweets-container">
+			 <div id="tweet-ref" class="tweets-list">
+			 	 <div id="tweets-date"></div>
+				 <textarea readonly id="tw-list">
+				 </textarea>
+			 </div>
+	 		</div>
 		</div>
 	</div>
 	</div>
