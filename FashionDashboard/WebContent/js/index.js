@@ -1,5 +1,8 @@
 currentPage = "loginPage";
 MAIN_TAG = "burton snow";
+google.load('visualization', '1', {packages: ['corechart', 'line']});
+google.setOnLoadCallback(drawBasic);
+
 
 function changePage(page) {
 	$(".toHide").hide();
@@ -10,6 +13,8 @@ function changePage(page) {
 		$("#fbLogin").show();
 		$('.content').css('background-image',"url('images/background.jpg')");
 		$("#titleDash").html("Burton Analytics");
+		$('.results').hide();
+		$('.loading').hide();
 	} else if (page == "dashPage") {
 		$(".header-btn").show();
 		$(".header-btn").html("Logout");
@@ -49,7 +54,9 @@ function showSentimentDetail() {
 }
 
 function populateDashboard() {
+	
 	callKeywordAnalysis(MAIN_TAG);
+	callSentimentAnalysis(MAIN_TAG);
 }
 
 function showError(text,id) {
@@ -92,4 +99,38 @@ function callKeywordAnalysis(inputTag) {
 		}
 	});
 }
+
+function callSentimentAnalysis(MAIN_TAG) {
+	$('#loading3').hide();
+  	$('#result3').show(); 
+  	data = [ [0, 0],   [100, 2.44],  [200, -1.44],  [300, 3.0],  [400, 3.1],  [500, 2.5] ];
+  	drawBasic(data);
+
+}
+
+function drawBasic(dataArray) {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'X');
+    data.addColumn('number', 'Popularity, based on recent tweets');
+
+    data.addRows(dataArray);
+
+    var options = {
+      hAxis: {
+        title: 'Recent tweets'
+      },
+      vAxis: {
+        title: 'Popularity'
+      },
+      legend: { position: 'bottom' },
+      
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_sentiment'));
+
+    chart.draw(data, options);
+  }
+
+
 
