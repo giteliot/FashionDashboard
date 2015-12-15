@@ -1,6 +1,10 @@
 package com.ibm.cloudoe.samples;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -20,6 +24,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,7 +41,10 @@ import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
 
+import com.alchemyapi.api.AlchemyAPI;
+import com.ibm.json.xml.XMLToJSONTransformer;
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
 
@@ -50,7 +64,7 @@ public class SentimentAnalysis extends HttpServlet {
 	private String username = "0b78b26b-8a5c-4076-bfa7-fa0a595b98ad";
 	private String password = "XNzv9gKrvl";
 	
-//	private String alchemyKey = "8176235156ba22f3fbf93e61b686f28793dc42f8";
+	private static String alchemyKey = "4202c06ba325660310662c0489eb61df79e9740b";
 	
 	
     public SentimentAnalysis() {
@@ -93,13 +107,13 @@ public class SentimentAnalysis extends HttpServlet {
 				
 				Object[] tweetsArray = (Object[]) tweetsArr.toArray();
 				
-				int chunkSize = 5;
+				int chunkSize = 100;
 				if (split != null)
 					chunkSize = Integer.parseInt(split);
 				
 				Object[][] splittedArrray = SentimentAnalysis.chunkArray(tweetsArray, chunkSize);
 				
-				ArrayList<JSONObject> sentiments = (ArrayList<JSONObject>) SentimentAnalysis.processInputs(splittedArrray);
+				ArrayList<JSONObject> sentiments = (ArrayList<JSONObject>) SentimentAnalysis.processInputs(splittedArrray, tag);
 				
 				ServletOutputStream servletOutputStream = resp.getOutputStream();
 				
@@ -108,18 +122,25 @@ public class SentimentAnalysis extends HttpServlet {
 					tweetsArr.addAll(sentiments);
 					servletOutputStream.print(tweetsArr.serialize());
 				}else{
-					double pos = 0, neg = 0, amb = 0, neu = 0;
+					double pos = 0, neg = 0;
+					int nr_pos = 0, nr_neg = 0;
 					for (JSONObject s : sentiments){
-						pos += (double) s.get("positive");
-						neg += (double) s.get("negative");
-						amb += (double) s.get("ambivalent");
-						neu += (double) s.get("neutral");
+						String p = (String) s.get("positive");
+						if (p != null){
+							pos += Double.parseDouble(p);
+							nr_pos++;
+						}
+						String n = (String) s.get("negative");
+						if (n != null){
+							neg += -Double.parseDouble(n);
+							nr_neg++;
+							}
 					}
 					sentiment = new JSONObject();
-					sentiment.put("positive", pos/sentiments.size());
-					sentiment.put("negative", neg/sentiments.size());
-					sentiment.put("neutral", neu/sentiments.size());
-					sentiment.put("ambivalent", amb/sentiments.size());
+					if (pos > 0)
+						sentiment.put("positive", pos/nr_pos);
+					if (neg > 0)
+						sentiment.put("negative", neg/nr_neg);
 					
 					servletOutputStream.print(sentiment.serialize());
 				}
@@ -166,7 +187,7 @@ public class SentimentAnalysis extends HttpServlet {
         return output;
     }
 	
-	public static List<JSONObject> processInputs(Object[][] splittedArrray)
+	public static List<JSONObject> processInputs(Object[][] splittedArrray, final String tag)
 	        throws InterruptedException, ExecutionException {
 
 	    int threads = Runtime.getRuntime().availableProcessors();
@@ -178,36 +199,37 @@ public class SentimentAnalysis extends HttpServlet {
 			Callable<Object> callable = new Callable<Object>() {
 	            public JSONObject call() throws Exception {
 	            	JSONObject output = new JSONObject();
+	            	JSONObject alchemyResp = new JSONObject();
 	                
-	            	double positive = 0;
-					double negative = 0;
-					double ambivalent = 0;
-					double neutral = 0;
+	            	
+					String tmpStrTweet = "";
 					
 					for (int j = 0; j < input.length; j++) {
 						JSONObject tweet = (JSONObject)input[j];
-						String tmpStrTweet = "";
 						try {
-							tmpStrTweet = (String)((JSONObject) ((JSONObject) ((JSONObject)tweet.get("cde")).get("content")).get("sentiment")).get("polarity");
-							
-							switch (tmpStrTweet) {
-								case "POSITIVE": positive +=1; break;
-								case "NEGATIVE": negative +=1; break;
-								case "AMBIVALENT": ambivalent +=1; break;
-								case "NEUTRAL": neutral +=1; break;
-								default:
-									break;
-							}
+							tmpStrTweet += " " + (String) ((JSONObject) tweet.get("message")).get("body");
 								
 						}catch (Exception e){
 							logger.log(Level.SEVERE, "Tweet error: " + e.getMessage(), e);
 						}
 					}
-					output.put("positive", positive/input.length);
-					output.put("negative", negative/input.length);
-					output.put("neutral", neutral/input.length);
-					output.put("ambivalent", ambivalent/input.length);
+					
+					AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromString(alchemyKey);
+					Document doc = alchemyObj.TextGetTargetedSentiment(tmpStrTweet, tag);
+					
+					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+					Source xmlSource = new DOMSource(doc);
+					Result outputTarget = new StreamResult(outputStream);
+					TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+					InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
+					
+					alchemyResp = JSONObject.parse(XMLToJSONTransformer.transform(is));
+					
+	            	String key = (String)((JSONObject)((JSONObject)alchemyResp.get("results")).get("docSentiment")).get("type");
+					String value = (String)((JSONObject)((JSONObject)alchemyResp.get("results")).get("docSentiment")).get("score");
 	            	
+					output.put(key, value);
+					
 	                return output;
 	            }
 	        };
@@ -222,6 +244,7 @@ public class SentimentAnalysis extends HttpServlet {
 	    }
 	    return outputs;
 	}
+	
 	
 	private HttpResponse callTwitterInsights(String type, String keyword, long from) throws URISyntaxException, ClientProtocolException, IOException {
 			String qUrl = baseURL+"/api/v1/messages/"+type+"?q="+URLEncoder.encode(keyword,"UTF-8");
