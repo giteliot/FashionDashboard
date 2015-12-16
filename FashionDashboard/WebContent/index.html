@@ -20,12 +20,12 @@
 	<div id="loginPage" class="toHide">
 		<button class="btn" onclick="doLogin('')">Login with Facebook</button>
 	</div>
-	<div id="loading-bar"></div>
-	<div id="dashPage" class="toHide container-fluid">
+	<div id="loading-bar" style="display:none;"></div>
+	<div id="dashPage" class="toHide container-fluid" style="display:none;">
 	<div class="row dash-row">
-		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12" onclick="showSentimentDetail()">
+		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12">
 			<div class="results" id="result1">
-				<span class="subtitle-dash">BRAND WAR</span>
+				<span class="subtitle-dash">BRAND WAR (%)</span>
 				<p></p>
 				<p class="brandwar-line"><span>1.</span> <span id="brandw1" class="brand-title cool-color">Burton</span></p>
 				<p class="brandwar-line"><span>2.</span> <span id="brandw2" class="brand-title cool-color">Billabong</span></p>
@@ -80,24 +80,24 @@
 			<div class="tweets-container">
 			 <div id="tweet-ref" class="tweets-list">
 			 	 <div id="tweets-date"></div>
-				 <textarea readonly id="tw-list">
-				 </textarea>
+				 <div  id="tw-list">
+				 </div>
 			 </div>
 	 		</div>
 		</div>
 	</div>
 	</div>
-	<div id="brandPage" class="toHide">
+	<div id="brandPage" class="toHide" style="display:none;">
 		<div class="row" style="padding-top: 8em; padding-left: 44%;">
 		<img src="images/progress.png" height="256px" width="256px">
 		</div>
 	</div>
-	<div id="keyPage" class="toHide">
+	<div id="keyPage" class="toHide" style="display:none;">
 		<div class="row" style="padding-top: 8em; padding-left: 44%;">
 		<img src="images/progress.png" height="256px" width="256px">
 		</div>
 	</div>
-	<div id="sentPage" class="toHide">
+	<div id="sentPage" class="toHide" style="display:none;">
 		<div class="row" style="padding-top: 8em; padding-left: 44%;">
 		<img src="images/progress.png" height="256px" width="256px">
 		</div>

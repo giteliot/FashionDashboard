@@ -61,9 +61,8 @@ function showSentimentDetail() {
 function populateDashboard() {
 	loadingProg = 0;
 	$('#loading-bar').show();
-	updateLoading(0);
-	setTimeout(function(){updateLoading(1),1000});
-	setTimeout(function(){updateLoading(1),2500});
+	updateLoading(1);
+	setTimeout(function(){updateLoading(1)},1500);
 	
 	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
 	callKeywordAnalysis(MAIN_TAG);
@@ -224,7 +223,7 @@ function printBrandwar(arr) {
 	$('#result1').show(); 	
 	for (var i=1; i < 6; i++) {
 		var tmpObj = arr[i-1];
-		$('#brandw'+i).html(tmpObj[0]+" ("+tmpObj[1].toFixed(2)*100+"%)");
+		$('#brandw'+i).html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
 		if (tmpObj[0] == FAKE_TAG)
 			$('#brandw'+i).css('color','#0065DD');
 	}

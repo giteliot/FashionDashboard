@@ -116,7 +116,7 @@ public class KeywordAnalysis extends HttpServlet {
 					tmpTweet = (JSONObject) tweetsArr.get(k);
 					tmpStrTweet = (String) ((JSONObject) tmpTweet.get("message")).get("body");
 					tweetsStr += " "+tmpStrTweet;
-					toWriteTweet += "\n-> "+tmpStrTweet;
+					toWriteTweet += "<b class='cool-color'>-></b> "+tmpStrTweet+"<br>";
 				}
 			} else {
 				logger.log(Level.SEVERE, "WARNING: No tweet found");
