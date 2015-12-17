@@ -99,6 +99,7 @@ function showSentimentDetail() {
 function reworkDashboard() {
 	$('.results').hide();	
 	$('#loading4').show();	
+	$('#result').hide();	
 	var newTag = $('#input-refiner').val();
 	if (newTag && newTag != "") {
 		MAIN_TAG = newTag;
@@ -115,11 +116,11 @@ function populateDashboard() {
 	updateLoading(1);
 	setTimeout(function(){updateLoading(1)},3000);
 	
-	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-	callKeywordAnalysis(MAIN_TAG);
-	callSentimentAnalysis(MAIN_TAG);	
-	callNewsAndBlogs(MAIN_TAG);
+//	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+//	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+//	callKeywordAnalysis(MAIN_TAG);
+//	callSentimentAnalysis(MAIN_TAG);	
+//	callNewsAndBlogs(MAIN_TAG);
 	
 //	$('#loading3').hide();
 //  	$('#result3').show();
@@ -325,6 +326,14 @@ function printBrandwar(arr) {
 		$('#brandw'+i).html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
 		if (tmpObj[0] == FAKE_TAG)
 			$('#brandw'+i).css('color','#0065DD');
+		else
+			$('#brandw'+i).css('color','#5EA9DD');
+		
+		$('#brandw'+i+"-det").html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
+		if (tmpObj[0] == FAKE_TAG)
+			$('#brandw'+i+"-det").css('color','#0065DD');
+		else
+			$('#brandw'+i+"-det").css('color','#5EA9DD');
 	}
 	brandWarArr = [];
 }

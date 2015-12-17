@@ -89,7 +89,10 @@
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
-      doLogin(response.name.split(" ")[0]);
+      if (response.name)
+    	  doLogin(response.name.split(" ")[0]);
+      else
+    	  changePage("dashPage");
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
     });

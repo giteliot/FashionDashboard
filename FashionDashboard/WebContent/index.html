@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Java Web Starter Application</title>
+	<title>Burton Analytics</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link rel="stylesheet" href="css/dark-bootstrap.css" />
 	<link rel="stylesheet" href="css/style.css" />
@@ -14,20 +14,20 @@
 	<h1 id="titleDash">Burton Analytics</h1>
 	<button class="btn btn-block header-btn" onclick="doLogout()" style="display:none;">Logout</button>
 	<div class="content">
-	<fb:login-button id="fbLogin" style="position:fixed; top:1.7em; right:1.5em; padding-left:5%;" scope="public_profile,email" onlogin="checkLoginState();">
+	<fb:login-button id="fbLogin" style="position:fixed; top:1.7em; right:1.5em; padding-left:5%;" scope="public_profile" onlogin="checkLoginState();">
 		</fb:login-button>
-		<input id="input-refiner" class="top-reselect-input" type="text" placeholder=" Refine your dashboard" style="display:none;">
+		<input id="input-refiner" class="top-reselect-input" type="text" placeholder=" Refine your dashboard" style="display:none;"> 
 		<button style="display:none;" class="btn btn-block analysis-btn top-reselect" onclick="reworkDashboard()">GO</button>
 	<hr>
 	<div id="loginPage" class="toHide">
-		<button class="btn" onclick="doLogin('')">Login with Facebook</button>
+		<!--  <button class="btn" onclick="doLogin('')">Login with Facebook</button> -->
 	</div>
 	<div id="loading-bar" style="display:none;"></div>
 	<div id="dashPage" class="toHide container-fluid" style="display:none;" >
 	<div class="row dash-row" style="position:relative; top:-1.5em;">
 		<div id="dash1" class="dash col-md-3 col-sm-3 col-xs-12" onclick="changePage('brandPage')">
 			<div class="results" id="result1">
-				<span class="subtitle-dash">BRAND WAR</span>
+				<a style="color:black;" class="subtitle-dash">BRAND WAR <img src="images/lente.png" height="24px" width="24px" style="padding:0.3em;"></a>
 				<p></p>
 				<p class="brandwar-line"><span>1.</span> <span id="brandw1" class="brand-title cool-color"></span></p>
 				<p class="brandwar-line"><span>2.</span> <span id="brandw2" class="brand-title cool-color"></span></p>
@@ -42,7 +42,7 @@
 		</div>
 		<div id="dash2" class="dash col-md-5 col-sm-5 col-xs-12" onclick="changePage('sentPage')">
 		<div class="results" id="result2">
-			<span class="subtitle-dash">MAIN TOPICS</span>
+			<a style="color:black;" class="subtitle-dash">MAIN TOPICS<img src="images/lente.png" height="24px" width="24px" style="padding:0.3em;"></a>
 			<div class="row row-keywords">
 				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword1"></div>
 				<div class="col-md-4 col-sm-4 col-xs-4"></div>
@@ -58,7 +58,7 @@
 				<div class="col-md-4 col-sm-4 col-xs-4"></div>
 				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword3"></div>
 			</div>
-		</div>	
+		</div>
 			<div class="loading" id="loading2">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
@@ -107,7 +107,7 @@
 			<div class="loading" id="loading4">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
-			<div class="tweets-container">
+			<div id="result4" class="results tweets-container">
 			 <div id="tweet-ref" class="tweets-list">
 			 	 <div id="tweets-date"></div>
 				 <div  id="tw-list">
@@ -177,11 +177,11 @@
 				
 				<div class="brandwar-det-res" style="display:none;">
 				<div class="row separated-rows ">
-					<p class="brandwar-line-det"><span>1.</span> <span id="brandw1-det" class="brand-title-det cool-color">ARMANI</span></p>
-					<p class="brandwar-line-det"><span>2.</span> <span id="brandw2-det" class="brand-title-det cool-color">CIAO</span></p>
-					<p class="brandwar-line-det"><span>3.</span> <span id="brandw3-det" class="brand-title-det cool-color">OH MIA BELA</span></p>
-					<p class="brandwar-line-det"><span>4.</span> <span id="brandw4-det" class="brand-title-det cool-color">MADUNINA</span></p>
-					<p class="brandwar-line-det"><span>5.</span> <span id="brandw5-det" class="brand-title-det cool-color">MILAN</span></p>
+					<p class="brandwar-line-det"><span>1.</span> <span id="brandw1-det" class="brand-title-det cool-color">Could not</span></p>
+					<p class="brandwar-line-det"><span>2.</span> <span id="brandw2-det" class="brand-title-det cool-color">Find</span></p>
+					<p class="brandwar-line-det"><span>3.</span> <span id="brandw3-det" class="brand-title-det cool-color">Any tweets</span></p>
+					<p class="brandwar-line-det"><span>4.</span> <span id="brandw4-det" class="brand-title-det cool-color">Sorry!</span></p>
+					<p class="brandwar-line-det"><span>5.</span> <span id="brandw5-det" class="brand-title-det cool-color">:(</span></p>
 				</div>
 				
 				<div class="row separated-rows" style="padding-left:15%; padding-top: 2em;">
