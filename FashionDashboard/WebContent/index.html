@@ -3,10 +3,16 @@
 <head>
 	<title>Burton Analytics</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
 	<link rel="stylesheet" href="css/dark-bootstrap.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
+	<script>
+	    webshims.setOptions('forms-ext', {types: 'date'});
+	webshims.polyfill('forms forms-ext');
+	</script>
 	
 </head>
 <body>
@@ -20,7 +26,7 @@
 		<button style="display:none;" class="btn btn-block analysis-btn top-reselect" onclick="reworkDashboard()">GO</button>
 	<hr>
 	<div id="loginPage" class="toHide">
-		<!--  <button class="btn" onclick="doLogin('')">Login with Facebook</button> -->
+		 <button class="btn" onclick="doLogin('')">Skip Login</button> 
 	</div>
 	<div id="loading-bar" style="display:none;"></div>
 	<div id="dashPage" class="toHide container-fluid" style="display:none;" >
