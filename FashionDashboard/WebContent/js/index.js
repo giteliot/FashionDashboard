@@ -50,7 +50,7 @@ function changePage(page) {
 		$("#fbLogin").hide();
 		$('.content').css('background-image','none');
 		$("#brandPage").show();
-		$('#loading-dett').hide();
+		$('.brandwar-det-res').hide();
 	} else {
 		$(".header-btn").show();
 		$(".header-btn").html("Home");
@@ -61,22 +61,11 @@ function changePage(page) {
 		
 }
 
-function reworkDashboard() {
-	$('.results').hide();	
-	$('#loading4').show();	
-	var newTag = $('#input-refiner').val();
-	if (newTag && newTag != "") {
-		MAIN_TAG = newTag;
-		FAKE_TAG = newTag;
-	}
-	console.log("Rework starting with "+newTag);
-	changePage("dashPage");
-		
-}
+
 
 function goBackToHome() {
 	$("#dashPage").show();
-	$(".pages").hide();
+	//$(".pages").hide();
 	$('#loading-bar').hide();
 	$(".header-btn").show();
 	$(".header-btn").html("Logout");
@@ -87,6 +76,8 @@ function goBackToHome() {
 	$('.top-reselect').show();
 	$("#brandPage").hide();
 	$('#loading-dett').hide();
+	$('#sentPage').hide();
+	$('#keyPage').hide();
 }
 
 
@@ -105,6 +96,19 @@ function showSentimentDetail() {
 	changePage("sentPage");
 }
 
+function reworkDashboard() {
+	$('.results').hide();	
+	$('#loading4').show();	
+	var newTag = $('#input-refiner').val();
+	if (newTag && newTag != "") {
+		MAIN_TAG = newTag;
+		FAKE_TAG = newTag;
+	}
+	console.log("Rework starting with "+newTag);
+	changePage("dashPage");
+		
+}
+
 function populateDashboard() {
 	loadingProg = 0;
 	$('#loading-bar').show();
@@ -112,9 +116,10 @@ function populateDashboard() {
 	setTimeout(function(){updateLoading(1)},3000);
 	
 	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-//	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-//	callKeywordAnalysis(MAIN_TAG);
-//	callSentimentAnalysis(MAIN_TAG);	
+	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+	callKeywordAnalysis(MAIN_TAG);
+	callSentimentAnalysis(MAIN_TAG);	
+	callNewsAndBlogs(MAIN_TAG);
 	
 //	$('#loading3').hide();
 //  	$('#result3').show();
@@ -124,12 +129,19 @@ function populateDashboard() {
 //	drawDouble(arr1,arr2, otherTag);
 }
 
+function callNewsAndBlogs() {
+	$('#dash5').hide();
+	$('#loading5').show();
+	$('#result5').hide();
+}
+
 function computeRank() {
 	$('#loading-dett').show();
 	$('.brandwar-det-res').hide();
 	var brandArray = [MAIN_TAG];
 	for (var i = 1; i < 5; i++)
-		brandArray.push($('#comp'+i).val());
+		if ($('#comp'+i).val() && $('#comp'+i).val() != "")
+			brandArray.push($('#comp'+i).val());
 	callBrandwarAnalysis(brandArray);
 }
 

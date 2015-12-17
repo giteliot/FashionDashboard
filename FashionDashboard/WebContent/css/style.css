@@ -107,10 +107,12 @@ label-input {
 	text-align: left;
 	cursor: pointer;
 	paddig-left: 3em;
+	padding-left:7%;
 }
 #dash2 {
 	margin-bottom: 4em;
 	cursor: pointer;
+	padding-left: 10%;
 }
 #dash3: {
 	height:17em;

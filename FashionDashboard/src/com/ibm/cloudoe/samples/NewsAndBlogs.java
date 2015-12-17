@@ -53,7 +53,11 @@ public class NewsAndBlogs extends HttpServlet {
 		try {
 			String qUrl = "";
 			int count = 4;
-			qUrl = formURL("json", "now-1d", "now", count,"burton","snowboard");
+			String inputTag = req.getParameter("tag");
+			if (inputTag.contains(" "))
+				qUrl = formURL("json", "now-1d", "now", count, inputTag.split(" ")[0] ,inputTag.split(" ")[1]);
+			else	
+				qUrl = formURL("json", "now-1d", "now", count, inputTag, "");
 			System.err.println(qUrl);
 			URI myURI = new URI(qUrl).normalize();
 
