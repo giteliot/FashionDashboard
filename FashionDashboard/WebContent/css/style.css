@@ -225,7 +225,7 @@ label-input {
 }
 
 .top-reselect-input:focus {
-    border: 0px;
+    
 }
 
 .input-compare {
@@ -241,7 +241,7 @@ label-input {
 }
 
 .input-compare:focus {
-    border: 0px;
+    
 }
 
 .button-compare {
@@ -303,4 +303,19 @@ label-input {
 
 .brandwar-det-res {
 	padding-top: 2em;
+}
+
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover
+{
+    outline:0px !important;
+    -webkit-appearance:none;
 }

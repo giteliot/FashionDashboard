@@ -78,6 +78,9 @@ function goBackToHome() {
 	$('#loading-dett').hide();
 	$('#sentPage').hide();
 	$('#keyPage').hide();
+	$('#result4').show();
+	$('#dash4').show();
+
 }
 
 
@@ -98,8 +101,7 @@ function showSentimentDetail() {
 
 function reworkDashboard() {
 	$('.results').hide();	
-	$('#loading4').show();	
-	$('#result').hide();	
+	$('.loading').show();	
 	var newTag = $('#input-refiner').val();
 	if (newTag && newTag != "") {
 		MAIN_TAG = newTag;
@@ -117,10 +119,10 @@ function populateDashboard() {
 	setTimeout(function(){updateLoading(1)},3000);
 	
 //	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-//	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-//	callKeywordAnalysis(MAIN_TAG);
-//	callSentimentAnalysis(MAIN_TAG);	
-//	callNewsAndBlogs(MAIN_TAG);
+	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+	callKeywordAnalysis(MAIN_TAG);
+	callSentimentAnalysis(MAIN_TAG);	
+	callNewsAndBlogs(MAIN_TAG);
 	
 //	$('#loading3').hide();
 //  	$('#result3').show();
@@ -196,6 +198,7 @@ function callKeywordAnalysis(inputTag) {
   	    		
   	    		readTweetsAndWrite("tweets/savedTweets.txt");
   	    		$('#dash4').show();
+  	    		$('#result4').show();
   	    		$('#loading4').hide();
   	    	} else {
   	    		showError("Ooops...something went wrong!",2);
@@ -235,7 +238,7 @@ function callSentimentAnalysis(inputTag, isCompare) {
   	    		var graphArray = [];
   	    		for (var k in data) {
   	    			var tmpSentiment = data[k]["positive"] ? data[k]["positive"] : data[k]["negative"];
-  	    			graphArray.push([k*splitSize,parseFloat(tmpSentiment)*100]);
+  	    			graphArray.push([(k+1)*splitSize,parseFloat(tmpSentiment)*100]);
   	    		}
   	    		
   	    		if (isCompare) {
