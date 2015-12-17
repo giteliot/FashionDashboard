@@ -4,7 +4,7 @@ var FAKE_TAG = "Burton";
 var processes = 5;
 var brandWarArr = [];
 var loadingProg = 0;
-var TOT_PROC = 9;
+var TOT_PROC = 10;
 var default_graph = [];
 google.load('visualization', '1', {packages: ['corechart', 'line']});
 
@@ -116,9 +116,9 @@ function populateDashboard() {
 	setTimeout(function(){updateLoading(1)},3000);
 	
 	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-	callKeywordAnalysis(MAIN_TAG);
-	callSentimentAnalysis(MAIN_TAG);	
+//	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+//	callKeywordAnalysis(MAIN_TAG);
+//	callSentimentAnalysis(MAIN_TAG);	
 	callNewsAndBlogs(MAIN_TAG);
 	
 //	$('#loading3').hide();
@@ -130,9 +130,15 @@ function populateDashboard() {
 }
 
 function callNewsAndBlogs() {
-	$('#dash5').hide();
-	$('#loading5').show();
 	$('#result5').hide();
+	$('#loading5').show();
+	//$('#result5').hide();
+	setTimeout(function(){
+		updateLoading(1);
+		$('#dash5').show();
+		$('#loading5').hide();
+		$('#result5').show();	
+	}, 6000);
 }
 
 function computeRank() {
