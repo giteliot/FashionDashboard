@@ -98,15 +98,19 @@ label-input {
 }
 
 .dash-row {
-	width: 95%;
-	padding-left: 7%;
+	width: 100%;
+	positon: relative;
+	padding-top: -3em;
 }
 
 #dash1 {
 	text-align: left;
+	cursor: pointer;
+	paddig-left: 3em;
 }
 #dash2 {
 	margin-bottom: 4em;
+	cursor: pointer;
 }
 #dash3: {
 	height:17em;
@@ -196,4 +200,105 @@ label-input {
 
 .cool-color {
 	color: #5EA9DD;
+}
+
+.top-reselect {
+	width: 0%;
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    min-width: 40px;
+}
+
+.top-reselect-input {
+	border-radius: 25px;
+    border: 1px solid #5EA9DD;
+    width: 0%;
+    position: absolute;
+    top: 1.25em;
+    right: 4em;
+    min-width: 12em;
+    font-size: 1.33em;
+    padding-left: 0.3em;
+}
+
+.top-reselect-input:focus {
+    border: 0px;
+}
+
+.input-compare {
+	border-radius: 25px;
+    border: 1px solid #5EA9DD;
+    width: 100%;
+    min-width: 50px;
+    font-size: 1.33em;
+    padding-left: 0.3em;
+    position: relative;
+    z-index: 1;
+    top:2em;
+}
+
+.input-compare:focus {
+    border: 0px;
+}
+
+.button-compare {
+	width: 80%;
+    min-width: 40px;
+    position: relative;
+    z-index: 1;
+    top:2.5em;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+#brandPage {
+	padding-left: 2em;
+	font-size: 1.2em;
+}
+
+
+.brandContent {
+	padding-top: 2em;
+}
+
+.separated-rows {
+	padding-bottom: 1.5em;
+}
+
+.custom-select {
+	font-size: 1.2em;
+	width: 80%;
+}
+
+.custom-date {
+	font-size: 1.2em;
+	width: 80%;
+	border-radius: 5px;
+    border: 1px solid #5EA9DD;
+    padding-left: 0.3em;
+}
+
+.competitor {
+	font-size: 1.2em;
+	width: 80%;
+	border-radius: 5px;
+    border: 1px solid #5EA9DD;
+    padding-left: 0.3em;
+}
+
+
+.brandwar-line-det {
+	padding-left: 20%;
+	font-size: 1.2em;
+}
+
+.brand-title-det {
+	font-size: 1.4em;
+}
+
+.brandwar-det-res {
+	padding-top: 2em;
 }

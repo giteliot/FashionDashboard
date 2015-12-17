@@ -25,7 +25,7 @@
 		<servlet-name>SentimentAnalysisServlet</servlet-name>
 		<url-pattern>/sentiment</url-pattern>
 	</servlet-mapping>
-	<servlet>
+	<!--  <servlet>
 		<servlet-name>NewsAndBlogsServlet</servlet-name>
 		<servlet-class>com.ibm.cloudoe.samples.NewsAndBlogs</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -33,6 +33,6 @@
 	<servlet-mapping>
 		<servlet-name>NewsAndBlogsServlet</servlet-name>
 		<url-pattern>/news</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> -->
 
 </web-app>

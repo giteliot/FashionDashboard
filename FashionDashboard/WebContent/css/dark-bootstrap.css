@@ -150,8 +150,8 @@ html input[disabled] {
 }
 button::-moz-focus-inner,
 input::-moz-focus-inner {
-  border: 0;
-  padding: 0;
+ /* border: 0;
+  padding: 0; */
 }
 input {
   line-height: normal;
@@ -2079,6 +2079,7 @@ select[multiple].input-lg {
   cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
+  border-radius: 25px
   white-space: nowrap;
   padding: 6px 12px;
   font-size: 1em;
@@ -2430,6 +2431,7 @@ fieldset[disabled] .btn-link:focus {
   width: 100%;
   padding-left: 0;
   padding-right: 0;
+  border-radius: 25px
 }
 .btn-block + .btn-block {
   margin-top: 5px;
@@ -3487,8 +3489,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn:first-child > .dropdown-toggle,
 .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
 .input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
+  /*border-bottom-right-radius: 0;
+  border-top-right-radius: 0;*/
 }
 .input-group-addon:first-child {
   border-right: 0;
@@ -3500,8 +3502,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn:last-child > .dropdown-toggle,
 .input-group-btn:first-child > .btn:not(:first-child),
 .input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
+ /* border-bottom-left-radius: 0;
+  border-top-left-radius: 0;*/
 }
 .input-group-addon:last-child {
   border-left: 0;

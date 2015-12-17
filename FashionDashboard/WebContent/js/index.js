@@ -5,13 +5,24 @@ var processes = 5;
 var brandWarArr = [];
 var loadingProg = 0;
 var TOT_PROC = 9;
+var default_graph = [];
 google.load('visualization', '1', {packages: ['corechart', 'line']});
-google.setOnLoadCallback(drawBasic);
+
+//google.setOnLoadCallback(drawBasic);
+
+$(document).ready(function(){	
+	$('.results').hide();
+	$('.loading').hide();
+	changePage("loginPage");
+});
 
 function changePage(page) {
+	
 	$(".toHide").hide();
 	$("#"+page).show();
 	$('#loading-bar').hide();
+	$('.top-reselect-input').hide();
+	$('.top-reselect').hide();
 	if (page == "loginPage") {
 		$(".header-btn").hide();
 		$("#fbLogin").show();
@@ -27,22 +38,58 @@ function changePage(page) {
 		$('.content').css('background-image','none');
 		$('.results').hide();
 		$('.loading').show();
+		$('.top-reselect-input').show();
+		$('.top-reselect').show();
+		$("#brandPage").hide();
+		$('#loading-dett').hide();
 		populateDashboard();
+	} else if (page == "brandPage"){
+		$(".header-btn").show();
+		$(".header-btn").html("Home");
+		$(".header-btn").attr("onclick","goBackToHome()");
+		$("#fbLogin").hide();
+		$('.content').css('background-image','none');
+		$("#brandPage").show();
+		$('#loading-dett').hide();
 	} else {
 		$(".header-btn").show();
 		$(".header-btn").html("Home");
-		$(".header-btn").attr("onclick","doLogin()");
+		$(".header-btn").attr("onclick","goBackToHome()");
 		$("#fbLogin").hide();
 		$('.content').css('background-image','none');
 	}
 		
 }
 
-$(document).ready(function(){	
-	$('.results').hide();
-	$('.loading').hide();
-	changePage("loginPage");
-});
+function reworkDashboard() {
+	$('.results').hide();	
+	$('#loading4').show();	
+	var newTag = $('#input-refiner').val();
+	if (newTag && newTag != "") {
+		MAIN_TAG = newTag;
+		FAKE_TAG = newTag;
+	}
+	console.log("Rework starting with "+newTag);
+	changePage("dashPage");
+		
+}
+
+function goBackToHome() {
+	$("#dashPage").show();
+	$(".pages").hide();
+	$('#loading-bar').hide();
+	$(".header-btn").show();
+	$(".header-btn").html("Logout");
+	$(".header-btn").attr("onclick","doLogout()");
+	$("#fbLogin").hide();
+	$('.content').css('background-image','none');
+	$('.top-reselect-input').show();
+	$('.top-reselect').show();
+	$("#brandPage").hide();
+	$('#loading-dett').hide();
+}
+
+
 
 function doLogin(username) {
 	if (username)
@@ -62,12 +109,36 @@ function populateDashboard() {
 	loadingProg = 0;
 	$('#loading-bar').show();
 	updateLoading(1);
-	setTimeout(function(){updateLoading(1)},1500);
+	setTimeout(function(){updateLoading(1)},3000);
 	
-	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-	callKeywordAnalysis(MAIN_TAG);
-	callSentimentAnalysis(MAIN_TAG);	
+	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+//	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+//	callKeywordAnalysis(MAIN_TAG);
+//	callSentimentAnalysis(MAIN_TAG);	
 	
+//	$('#loading3').hide();
+//  	$('#result3').show();
+//	var arr1 = [[0,4],[100,13],[200,19]]; 
+//	var arr2 = [[0,17],[100,9],[200,29]];
+//	var otherTag = "Ciccio";
+//	drawDouble(arr1,arr2, otherTag);
+}
+
+function computeRank() {
+	$('#loading-dett').show();
+	$('.brandwar-det-res').hide();
+	var brandArray = [MAIN_TAG];
+	for (var i = 1; i < 5; i++)
+		brandArray.push($('#comp'+i).val());
+	callBrandwarAnalysis(brandArray);
+}
+
+function compareSentiment() {
+	var tmpText = $("#compare-text").val();
+	console.log("Comparing with "+tmpText);
+	if (tmpText && tmpText != "") {
+		callSentimentAnalysis(tmpText, true);
+	}	
 }
 
 function showError(text,id) {
@@ -120,7 +191,7 @@ function callKeywordAnalysis(inputTag) {
 	});
 }
 
-function callSentimentAnalysis(inputTag) {
+function callSentimentAnalysis(inputTag, isCompare) {
 	
 	$('#loading3').show();
   	$('#result3').hide(); 
@@ -145,9 +216,16 @@ function callSentimentAnalysis(inputTag) {
   	    		var graphArray = [];
   	    		for (var k in data) {
   	    			var tmpSentiment = data[k]["positive"] ? data[k]["positive"] : data[k]["negative"];
-  	    			graphArray.push([k*splitSize,parseFloat(tmpSentiment)]);
+  	    			graphArray.push([k*splitSize,parseFloat(tmpSentiment)*100]);
   	    		}
-  	    		drawBasic(graphArray);
+  	    		
+  	    		if (isCompare) {
+  	    			drawDouble(default_graph, graphArray, inputTag);
+  	    		} else {
+  	    			default_graph = graphArray;
+  	    			drawBasic(graphArray);
+  	    		}
+  	    		
   	    	} else {
   	    		showError("Ooops...something went wrong!",3);
   	    	}
@@ -168,6 +246,7 @@ function callBrandwarAnalysis(arrStuff) {
 	$('#loading1').show();
   	$('#result1').hide();
   	processes = 5;
+  	brandWarArr = [];
   	for (i = 0; i < 5; i++) {
   		callSingleSentiment(arrStuff[i]);
   	}
@@ -189,12 +268,12 @@ function callSingleSentiment(inputTag) {
   	    	
   	    	if (data) {   		
   	    		processes -= 1;
-  	    		$('#loading-bar').css('width',(5-processes)*20+"%");
   	    		var tmpSentiment = data["positive"] ? data["positive"] : data["negative"];
   	    		if (inputTag == MAIN_TAG)
   	    			inputTag =  FAKE_TAG;
   	    		brandWarArr.push([inputTag,tmpSentiment]);
   	    		if (processes < 1) {
+  	    			processes = 5;	    			
   	    			brandWarArr.sort(compareBrands);
   	    			printBrandwar(brandWarArr);
   	    		}
@@ -221,12 +300,15 @@ function callSingleSentiment(inputTag) {
 function printBrandwar(arr) {
 	$('#loading1').hide();
 	$('#result1').show(); 	
+	$('#loading-dett').hide();
+	$('.brandwar-det-res').show();
 	for (var i=1; i < 6; i++) {
 		var tmpObj = arr[i-1];
 		$('#brandw'+i).html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
 		if (tmpObj[0] == FAKE_TAG)
 			$('#brandw'+i).css('color','#0065DD');
 	}
+	brandWarArr = [];
 }
 
 function drawBasic(dataArray) {
@@ -242,7 +324,38 @@ function drawBasic(dataArray) {
         title: 'Recent tweets'
       },
       vAxis: {
-        title: 'Popularity'
+        title: 'Popularity (%)'
+      },
+      legend: { position: 'bottom' },
+      
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_sentiment'));
+
+    chart.draw(data, options);
+  }
+
+function drawDouble(arr1,arr2, otherTag) {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'X');
+    data.addColumn('number', 'Popularity of '+FAKE_TAG);
+    data.addColumn('number', 'Popularity of '+otherTag);
+
+    var dataArray = [];
+    for (var k in arr1) {
+    	if (arr1[k][1] && arr2[k][1])
+    		dataArray.push([arr1[k][0],arr1[k][1],arr2[k][1]]);
+    }
+
+    data.addRows(dataArray);
+
+    var options = {
+      hAxis: {
+        title: 'Recent tweets'
+      },
+      vAxis: {
+        title: 'Popularity (%)'
       },
       legend: { position: 'bottom' },
       
@@ -276,11 +389,12 @@ function readTweetsAndWrite(file)
 function updateLoading(n) {
 	console.log(loadingProg);
 	loadingProg += n;
-	$('#loading-bar').css('width',((parseFloat(loadingProg)/TOT_PROC)*100)+"%")
+	$('#loading-bar').css('width',((parseFloat(loadingProg)/TOT_PROC)*96)+"%")
 	if (loadingProg > TOT_PROC-1) 
 		setTimeout(function(){$('#loading-bar').hide();},1000);
 }
 
 function compareBrands(a,b) {
 	  return b[1]-a[1];
-	}
+}
+

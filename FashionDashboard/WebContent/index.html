@@ -12,35 +12,37 @@
 <body>
 	<script src="js/facebook.js"></script>
 	<h1 id="titleDash">Burton Analytics</h1>
-	<button class="btn btn-block header-btn" onclick="doLogout()">Logout</button>
+	<button class="btn btn-block header-btn" onclick="doLogout()" style="display:none;">Logout</button>
 	<div class="content">
 	<fb:login-button id="fbLogin" style="position:fixed; top:1.7em; right:1.5em; padding-left:5%;" scope="public_profile,email" onlogin="checkLoginState();">
 		</fb:login-button>
+		<input id="input-refiner" class="top-reselect-input" type="text" placeholder=" Refine your dashboard" style="display:none;">
+		<button style="display:none;" class="btn btn-block analysis-btn top-reselect" onclick="reworkDashboard()">GO</button>
 	<hr>
 	<div id="loginPage" class="toHide">
 		<button class="btn" onclick="doLogin('')">Login with Facebook</button>
 	</div>
 	<div id="loading-bar" style="display:none;"></div>
-	<div id="dashPage" class="toHide container-fluid" style="display:none;">
-	<div class="row dash-row">
-		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12">
+	<div id="dashPage" class="toHide container-fluid" style="display:none;" >
+	<div class="row dash-row" style="position:relative; top:-1.5em;">
+		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12" onclick="changePage('brandPage')">
 			<div class="results" id="result1">
-				<span class="subtitle-dash">BRAND WAR (%)</span>
+				<span class="subtitle-dash">BRAND WAR</span>
 				<p></p>
-				<p class="brandwar-line"><span>1.</span> <span id="brandw1" class="brand-title cool-color">Burton</span></p>
-				<p class="brandwar-line"><span>2.</span> <span id="brandw2" class="brand-title cool-color">Billabong</span></p>
-				<p class="brandwar-line"><span>3.</span> <span id="brandw3" class="brand-title cool-color">Nitro</span></p>
-				<p class="brandwar-line"><span>4.</span> <span id="brandw4" class="brand-title cool-color">Airblaster</span></p>
-				<p class="brandwar-line"><span>5.</span> <span id="brandw5" class="brand-title cool-color">Vans</span></p>
+				<p class="brandwar-line"><span>1.</span> <span id="brandw1" class="brand-title cool-color"></span></p>
+				<p class="brandwar-line"><span>2.</span> <span id="brandw2" class="brand-title cool-color"></span></p>
+				<p class="brandwar-line"><span>3.</span> <span id="brandw3" class="brand-title cool-color"></span></p>
+				<p class="brandwar-line"><span>4.</span> <span id="brandw4" class="brand-title cool-color"></span></p>
+				<p class="brandwar-line"><span>5.</span> <span id="brandw5" class="brand-title cool-color"></span></p>
 			</div>
 			
 			<div class="loading" id="loading1">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
 		</div>
-		<div id="dash2" class="dash col-md-7 col-sm-7 col-xs-12" onclick="showSentimentDetail()">
+		<div id="dash2" class="dash col-md-7 col-sm-7 col-xs-12" onclick="changePage('sentPage')">
 		<div class="results" id="result2">
-			<span class="subtitle-dash">KEY CONCEPTS</span>
+			<span class="subtitle-dash">MAIN TOPICS</span>
 			<div class="row row-keywords">
 				<div class="col-md-4 col-sm-4 col-xs-4" id="keyword1"></div>
 				<div class="col-md-4 col-sm-4 col-xs-4"></div>
@@ -63,11 +65,20 @@
 		
 		</div>
 	</div>
-	<div class="row dash-row">
+	<div class="row dash-row" style="position:relative; top:-3em;">
 		<div id="dash3" class="dash-no-over col-md-6 col-sm-6 col-xs-12">
 		<div class="results" id="result3">
-			<!--  <span class="subtitle-dash">SENTIMENT GRAPH</span>-->
-			 <div id="chart_sentiment" style="width: 600px; height: 300px"></div>
+			<div style="padding-left:12%; width: 80%" class="row">
+				<div class="col-md-10 col-sm-10 col-xs-10">
+					<input id="compare-text" class="input-compare" type="text" placeholder=" Compare to">
+				</div>	
+				<div class="col-md-2 col-sm-2 col-xs-2">
+					<button class="btn btn-block analysis-btn button-compare" onclick="compareSentiment()">GO</button>
+				</div>			
+			</div>		
+			<div class="row">		
+					<div id="chart_sentiment" style="width: 600px; height: 300px"></div>
+			</div>
 		</div>	
 			<div class="loading" id="loading3">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
@@ -87,9 +98,78 @@
 		</div>
 	</div>
 	</div>
+	<div class="pages">
 	<div id="brandPage" class="toHide" style="display:none;">
-		<div class="row" style="padding-top: 8em; padding-left: 44%;">
-		<img src="images/progress.png" height="256px" width="256px">
+		<span class="cool-color bold">Brand war</span><span> compares brands based on the positivity of the tweets talking about them.</span>
+		<div class="brandContent" class="row">
+			<div class="col-md-5 col-sm-5 col-xs-12 brandwar-det-in">
+				
+				<div class="row">
+				Search amongs tweets in 
+				</div>
+				<div class="row separated-rows">
+				<select class="btn btn-block analysis-btn custom-select">
+				  <option value="volvo">USA</option>
+				  <option value="saab">Europe</option>
+				  <option value="mercedes">Asia</option>
+				  <option value="audi">Africa</option>
+				  <option value="audi">South America</option>
+				  <option value="audi">Oceania</option>
+				</select>
+				</div>
+				
+				<div class="row">
+				From
+				</div>
+				<div class="row separated-rows">
+					<input type="date" class="cool-color custom-date">
+				</div>
+				
+				<div class="row">
+				To
+				</div>
+				<div class="row separated-rows">
+					<input type="date" class="cool-color custom-date">
+				</div>
+				
+				<div  class="row separated-rows">
+						And choose your competitors:
+				</div>
+				<div  class="row separated-rows">
+						<input id="comp1" class="competitor" type="text" placeholder=" Competitor">
+				</div>
+				<div  class="row separated-rows">
+						<input id="comp2" class="competitor" type="text" placeholder=" Competitor">
+				</div>
+				<div  class="row separated-rows">
+						<input id="comp3" class="competitor" type="text" placeholder=" Competitor">
+				</div>
+				<div  class="row separated-rows">
+						<input id="comp4" class="competitor" type="text" placeholder=" Competitor">
+				</div>
+			</div>
+			<div class="col-md-7 col-sm-7 col-xs-12 ">
+				<div class="row separated-rows" style="padding-left:15%;">
+					<button style="width:60%;" class="btn btn-block analysis-btn" onclick="computeRank();">Compute Rankings!</button>
+				</div>
+				<div class="loading" id="loading-dett" style="padding-left: 30%; padding-top: 25%;">
+				<img  src="images/twitter_flapping.gif" height="84px" width="112px">
+				</div>
+				
+				<div class="brandwar-det-res" style="display:none;">
+				<div class="row separated-rows ">
+					<p class="brandwar-line-det"><span>1.</span> <span id="brandw1" class="brand-title-det cool-color">ARMANI</span></p>
+					<p class="brandwar-line-det"><span>2.</span> <span id="brandw2" class="brand-title-det cool-color">CIAO</span></p>
+					<p class="brandwar-line-det"><span>3.</span> <span id="brandw3" class="brand-title-det cool-color">OH MIA BELA</span></p>
+					<p class="brandwar-line-det"><span>4.</span> <span id="brandw4" class="brand-title-det cool-color">MADUNINA</span></p>
+					<p class="brandwar-line-det"><span>5.</span> <span id="brandw5" class="brand-title-det cool-color">MILAN</span></p>
+				</div>
+				
+				<div class="row separated-rows" style="padding-left:15%; padding-top: 2em;">
+					<button style="width:60%;" class="btn btn-block analysis-btn" onclick="goBackToHome();">Save to Dashboard!</button>
+				</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div id="keyPage" class="toHide" style="display:none;">
@@ -101,6 +181,7 @@
 		<div class="row" style="padding-top: 8em; padding-left: 44%;">
 		<img src="images/progress.png" height="256px" width="256px">
 		</div>
+	</div>
 	</div>
 	</div>
 	<script src="js/index.js"></script>
