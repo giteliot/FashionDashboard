@@ -116,9 +116,9 @@ function populateDashboard() {
 	setTimeout(function(){updateLoading(1)},3000);
 	
 	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-//	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-//	callKeywordAnalysis(MAIN_TAG);
-//	callSentimentAnalysis(MAIN_TAG);	
+	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+	callKeywordAnalysis(MAIN_TAG);
+	callSentimentAnalysis(MAIN_TAG);	
 	callNewsAndBlogs(MAIN_TAG);
 	
 //	$('#loading3').hide();
