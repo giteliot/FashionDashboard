@@ -17,21 +17,34 @@
 </head>
 <body>
 	<script src="js/facebook.js"></script>
-	<h1 id="titleDash">Burton Analytics</h1>
+	<div class="row">
+	<div class="col-md-3 col-sm-3 col-xs-12">
 	<button class="btn btn-block header-btn" onclick="doLogout()" style="display:none;">Logout</button>
-	<div class="content">
-	<fb:login-button id="fbLogin" style="position:fixed; top:1.7em; right:1.5em; padding-left:5%;" scope="public_profile" onlogin="checkLoginState();">
+	</div>
+	<div class="col-md-6 col-sm-6 col-xs-12">
+	<h1 id="titleDash">Burton Analytics</h1>
+	</div>
+	<div class="col-md-3 col-sm-3 col-xs-12">
+	<fb:login-button id="fbLogin" style="position:fixed; top:1.7em; right:1.5em; padding-left:5%;" scope="public_profile, user_posts" onlogin="checkLoginState();">
 		</fb:login-button>
-		<input id="input-refiner" class="top-reselect-input" type="text" placeholder=" Refine your dashboard" style="display:none;"> 
-		<button style="display:none;" class="btn btn-block analysis-btn top-reselect" onclick="reworkDashboard()">GO</button>
+	<input id="input-refiner" class="top-reselect-input" type="text" placeholder=" Refine your dashboard" style="display:none;"> 
+	<button style="display:none;" class="btn btn-block analysis-btn top-reselect" onclick="reworkDashboard()">GO</button>
+	</div>
+
+	</div>
+	<div class="content">
+	
 	<hr>
+	
 	<div id="loginPage" class="toHide">
 		 <button class="btn" onclick="doLogin('')">Skip Login</button> 
 	</div>
 	<div id="loading-bar" style="display:none;"></div>
 	<div id="dashPage" class="toHide container-fluid" style="display:none;" >
+	
 	<div class="row dash-row" style="position:relative; top:-1.5em;">
-		<div id="dash1" class="dash col-md-3 col-sm-3 col-xs-12" onclick="changePage('brandPage')">
+	<h3 class="cool-color bold" style="padding-left:2em;"><img src="images/twitter-icon.png" height="36px" width="42px"><span class="img-title">Data from twitter</span></h3>
+		<div id="dash1" class="dash col-md-5 col-sm-5 col-xs-12" onclick="changePage('brandPage')">
 			<div class="results" id="result1">
 				<a style="color:black;" class="subtitle-dash">BRAND WAR <img src="images/lente.png" height="24px" width="24px" style="padding:0.3em;"></a>
 				<p></p>
@@ -46,7 +59,7 @@
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
 		</div>
-		<div id="dash2" class="dash col-md-5 col-sm-5 col-xs-12" onclick="changePage('sentPage')">
+		<div id="dash2" class="dash col-md-7 col-sm-7 col-xs-12" onclick="changePage('sentPage')">
 		<div class="results" id="result2">
 			<a style="color:black;" class="subtitle-dash">MAIN TOPICS<img src="images/lente.png" height="24px" width="24px" style="padding:0.3em;"></a>
 			<div class="row row-keywords">
@@ -71,45 +84,27 @@
 		
 		</div>
 		
-		<div id="dash5" class="dash col-md-4 col-sm-4 col-xs-12" onclick="">
-		<div class="results" id="result5">
-			<span class="subtitle-dash">TOP NEWS</span>
-			<div class="row row-keywords">
-				<a class="news-link" target="_blank" href="http://www.thisnext.com/item/6D15B430/Burton-Mint-Boots">Burton Mint Boots</a>
-			</div>	
-			<div class="row row-keywords">
-				<a class="news-link" target="_blank" href="http://www.peninsuladailynews.com/article/20151217/NEWS/312179985/weather-permitting-snow-fun-starts-saturday-at-hurricane-ridge-ski">Weather permitting, snow fun starts Saturday at Hurricane Ridge Ski and Snowboard Area</a>
-			</div>	
-			<div class="row row-keywords">
-				<a class="news-link" target="_blank" href="http://www.thisnext.com/item/FCFDACBA/Spyder-Diamond-Jacket-Womens">Spyder Diamond Jacket - Women's</a>
-			</div>
-		</div>	
-			<div class="loading" id="loading5">
-			<img src="images/twitter_flapping.gif" height="84px" width="112px">
-			</div>
-		
-		</div>
 	</div>
 	<div class="row dash-row" style="position:relative; top:-3em;">
-		<div id="dash3" class="dash-no-over col-md-6 col-sm-6 col-xs-12">
+		<div id="dash3" class="dash-no-over col-md-6 col-sm-6 col-xs-12" style="margin-bottom:10em">
 		<div class="results" id="result3">
-			<div style="padding-left:12%; width: 80%" class="row">
-				<div class="col-md-10 col-sm-10 col-xs-10">
+			<div style="padding-left:12%; width: 75%" class="row">
+				<div class="col-md-11 col-sm-11 col-xs-11" style="padding-right:0px;">
 					<input id="compare-text" class="input-compare" type="text" placeholder=" Compare to">
 				</div>	
-				<div class="col-md-2 col-sm-2 col-xs-2">
+				<div class="col-md-1 col-sm-1 col-xs-1" style="padding-left:0.5em;">
 					<button class="btn btn-block analysis-btn button-compare" onclick="compareSentiment()">GO</button>
 				</div>			
 			</div>		
 			<div class="row">		
-					<div id="chart_sentiment" style="width: 600px; height: 300px"></div>
+					<div class="chart-container" id="chart_sentiment" style="width: 512px; height: 240px"></div>
 			</div>
 		</div>	
 			<div class="loading" id="loading3">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
 		</div>
-		<div id="dash4" class="dash-no-over col-md-6 col-sm-6 col-xs-12">
+		<div id="dash4" class="dash-no-over col-md-6 col-sm-6 col-xs-12" style="margin-bottom:10em">
 			<div class="loading" id="loading4">
 			<img src="images/twitter_flapping.gif" height="84px" width="112px">
 			</div>
@@ -122,10 +117,59 @@
 	 		</div>
 		</div>
 	</div>
+	
+	
+	
+	<div class="row" >
+	<hr>
+	<h3 class="facebook-color bold" style="padding-left:2em;"><img src="images/facebook-icon.png" height="36px" width="42px"><span class="img-title">Data from Facebook</span></h3>
+	<div id="dash6" class="dash" onclick="">
+		<div class="results" id="result6">
+			<div class="col-md-6 col-sm-6 col-xs-12">
+			<span class="subtitle-dash">SENTIMENT OVER TIME</span>
+				<div class="chart-container" id="fb_line" style="width: 512px; height: 240px"></div>
+			</div>
+			
+			<div class="col-md-6 col-sm-6 col-xs-12">
+			<span class="subtitle-dash">AGGREGATED SENTIMENT</span>
+				<div class="chart-container" id="fb_pie" style="width: 512px; height: 240px"></div>
+			</div>
+		</div>	
+			<div class="loading" id="loading6">
+			<img style="padding:10%;" src="images/facebook-loading.png" height="84px" width="112px">
+			</div>	
+		</div>
 	</div>
+	
+	
+	
+	<div class="row" >
+	<hr>
+	<h3 class="news-color bold" style="padding-left:2em;"><img  src="images/news-icon.png" height="36px" width="42px"><span class="img-title">Data from News and Blogs</span></h3>
+	<div id="dash5" class="dash col-md-12 col-sm-12 col-xs-12" onclick="">
+		<div class="results" id="result5">
+			<span class="subtitle-dash">TOP NEWS</span>
+			<div class="row row-keywords">
+				<a class="news-link news-color" target="_blank" href="http://www.thisnext.com/item/6D15B430/Burton-Mint-Boots">Burton Mint Boots</a>
+			</div>	
+			<div class="row row-keywords">
+				<a class="news-link news-color" target="_blank" href="http://www.peninsuladailynews.com/article/20151217/NEWS/312179985/weather-permitting-snow-fun-starts-saturday-at-hurricane-ridge-ski">Weather permitting, snow fun starts Saturday at Hurricane Ridge Ski and Snowboard Area</a>
+			</div>	
+			<div class="row row-keywords">
+				<a class="news-link news-color" target="_blank" href="http://www.thisnext.com/item/FCFDACBA/Spyder-Diamond-Jacket-Womens">Spyder Diamond Jacket - Women's</a>
+			</div>
+		</div>	
+			<div class="loading" id="loading5">
+			<img style="padding:10%;" src="images/news-loading.gif" height="84px" width="112px">
+			</div>	
+		</div>
+	</div>
+	
+	</div>
+	
 	<div class="pages">
 	<div id="brandPage" class="toHide" style="display:none;">
-		<span class="cool-color bold">Brand war</span><span> compares brands based on the positivity of the tweets talking about them.</span>
+		<span class="cool-color bold">Brand war</span><span> compares brands based on the sentiment of the tweets talking about them.</span>
 		<div class="brandContent" class="row">
 			<div class="col-md-5 col-sm-5 col-xs-12 brandwar-det-in">
 				
@@ -184,11 +228,11 @@
 				
 				<div class="brandwar-det-res" style="display:none;">
 				<div class="row separated-rows ">
-					<p class="brandwar-line-det"><span>1.</span> <span id="brandw1-det" class="brand-title-det cool-color">Could not</span></p>
-					<p class="brandwar-line-det"><span>2.</span> <span id="brandw2-det" class="brand-title-det cool-color">Find</span></p>
-					<p class="brandwar-line-det"><span>3.</span> <span id="brandw3-det" class="brand-title-det cool-color">Any tweets</span></p>
-					<p class="brandwar-line-det"><span>4.</span> <span id="brandw4-det" class="brand-title-det cool-color">Sorry!</span></p>
-					<p class="brandwar-line-det"><span>5.</span> <span id="brandw5-det" class="brand-title-det cool-color">:(</span></p>
+					<p class="brandwar-line-det"><span>1.</span> <span id="brandw1-det" class="brand-title-det cool-color"></span></p>
+					<p class="brandwar-line-det"><span>2.</span> <span id="brandw2-det" class="brand-title-det cool-color"></span></p>
+					<p class="brandwar-line-det"><span>3.</span> <span id="brandw3-det" class="brand-title-det cool-color"></span></p>
+					<p class="brandwar-line-det"><span>4.</span> <span id="brandw4-det" class="brand-title-det cool-color"></span></p>
+					<p class="brandwar-line-det"><span>5.</span> <span id="brandw5-det" class="brand-title-det cool-color"></span></p>
 				</div>
 				
 				<div class="row separated-rows" style="padding-left:15%; padding-top: 2em;">

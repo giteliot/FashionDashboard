@@ -1,3 +1,5 @@
+
+
 /*window.fbAsyncInit = function() {
     FB.init({
       appId      : '195741647432438',
@@ -93,7 +95,58 @@
     	  doLogin(response.name.split(" ")[0]);
       else
     	  changePage("dashPage");
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+      
+      FB.api("/me/feed",
+    		    function (response) {
+    		      if (response && !response.error) {
+    		    	  populateFacebookData(response.data);
+    		      }
+    		    }
+    		);
     });
+  }
+  
+  function populateFacebookData(data) {
+	  var feedList = "";
+	  var feedArray = [];
+	  for (var i in data) {
+		  if (data[i].story)
+			  feedArray.push({"message":{"body":data[i].story}});
+	  }
+	  $('#result6').hide();
+	  $('#loading6').show();
+	  $.ajax({
+			url: "textsentiment",
+			type: 'GET',
+			contentType:'json',
+			data: {
+				feed: feedList,
+			},
+	  		success: function(data) {  	
+	  	    	if (typeof data == "string")
+	  	    		data = JSON.parse(data);
+	  	    	
+	  	    	if (data) {   		
+	  	    		processes -= 1;
+	  	    		var tmpSentiment = data["positive"] ? data["positive"] : data["negative"];
+	  	    		if (inputTag == MAIN_TAG)
+	  	    			inputTag =  FAKE_TAG;
+	  	    		brandWarArr.push([inputTag,tmpSentiment]);
+	  	    		if (processes < 1) {
+	  	    			processes = 5;	    			
+	  	    			brandWarArr.sort(compareBrands);
+	  	    			printBrandwar(brandWarArr);
+	  	    		}
+	  	    	} else {	    		
+	  	    		$('#loading6').hide();
+	  			  	$('#result6').show(); 	
+	  			  	showError("Ooops...something went wrong!",1);
+	  	    	}
+			},
+			error: function(xhr, textStatus, thrownError) {
+				$('#loading6').hide();
+			  	$('#result6').show(); 		
+	  	    	showError("Ooops...something went wrong!",1);
+			}
+		});
   }

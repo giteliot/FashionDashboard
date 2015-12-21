@@ -56,9 +56,9 @@ h1 {
 }
 #tw-list {
 	padding-top: 1.5em;
-	height: 256px ;
-	width:95%;
-	padding-left:1em;
+	height: 196px ;
+	width:90%;
+	padding-left:2em;
 	border: 0px;
 	text-align: left;
 	overflow-y:auto;
@@ -116,13 +116,15 @@ label-input {
 }
 #dash3: {
 	height:17em;
+	margin-bottom:8em !important";
 }
 #dash4: {
 	padding-top:6em;
+	margin-bottom:8em !important;
 }
 
 .header-btn {
-	width:10%; 
+	width:30%; 
 	position:absolute; 
 	top:1.5em; 
 	left:1.5em;
@@ -202,6 +204,14 @@ label-input {
 
 .cool-color {
 	color: #5EA9DD;
+}
+
+.news-color {
+	color: #45a941;
+}
+
+.facebook-color {
+	color: #2D4486;
 }
 
 .top-reselect {
@@ -306,6 +316,7 @@ label-input {
 }
 
 
+
 textarea:hover, 
 input:hover, 
 textarea:active, 
@@ -318,4 +329,13 @@ button:hover
 {
     outline:0px !important;
     -webkit-appearance:none;
+}
+
+
+.chart-container {
+	padding-left: 10%;
+}
+
+.img-title {
+	padding-left:0.5em;
 }
