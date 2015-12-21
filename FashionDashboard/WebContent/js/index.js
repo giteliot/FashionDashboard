@@ -118,18 +118,19 @@ function populateDashboard() {
 	updateLoading(1);
 	setTimeout(function(){updateLoading(1)},3000);
 	
-//	console.log("Used tags -> "+[MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
-	callBrandwarAnalysis([MAIN_TAG,"Billabong","Vans","Nitro","Airblaster"]);
+
+  	processes = 5;
+	callBrandwarAnalysis([MAIN_TAG,"Billabong","Oakley","Nitro","Airblaster"]);
 	callKeywordAnalysis(MAIN_TAG);
-	callSentimentAnalysis(MAIN_TAG);	
+	callSentimentAnalysis(MAIN_TAG);
 	callNewsAndBlogs(MAIN_TAG);
 	
-//	$('#loading3').hide();
-//  	$('#result3').show();
-//	var arr1 = [[0,4],[100,13],[200,19]]; 
-//	var arr2 = [[0,17],[100,9],[200,29]];
-//	var otherTag = "Ciccio";
-//	drawDouble(arr1,arr2, otherTag);
+	$('#result6').show();
+	$('#loading6').hide();
+	
+	drawBasic([[100,40],[200,45],[300,30],[400,35],[500,66]],"fb_line");
+	drawPie([["Sentiment","% of positive feedback"],["Positive",82],["Negative",18]],"fb_pie");
+	
 }
 
 function callNewsAndBlogs() {
@@ -148,9 +149,15 @@ function computeRank() {
 	$('#loading-dett').show();
 	$('.brandwar-det-res').hide();
 	var brandArray = [MAIN_TAG];
-	for (var i = 1; i < 5; i++)
-		if ($('#comp'+i).val() && $('#comp'+i).val() != "")
+	processes = 1;
+	for (var i = 1; i < 5; i++) {
+		console.log("Competitor -> "+$('#comp'+i).val());
+		if ($('#comp'+i).val() && $('#comp'+i).val() != "") {
 			brandArray.push($('#comp'+i).val());
+			processes += 1;
+		}
+			
+	}	
 	callBrandwarAnalysis(brandArray);
 }
 
@@ -245,7 +252,7 @@ function callSentimentAnalysis(inputTag, isCompare) {
   	    			drawDouble(default_graph, graphArray, inputTag);
   	    		} else {
   	    			default_graph = graphArray;
-  	    			drawBasic(graphArray);
+  	    			drawBasic(graphArray, "chart_sentiment", true);
   	    		}
   	    		
   	    	} else {
@@ -267,9 +274,8 @@ function callSentimentAnalysis(inputTag, isCompare) {
 function callBrandwarAnalysis(arrStuff) {
 	$('#loading1').show();
   	$('#result1').hide();
-  	processes = 5;
   	brandWarArr = [];
-  	for (i = 0; i < 5; i++) {
+  	for (i = 0; i < processes; i++) {
   		callSingleSentiment(arrStuff[i]);
   	}
   	
@@ -326,26 +332,32 @@ function printBrandwar(arr) {
 	$('.brandwar-det-res').show();
 	for (var i=1; i < 6; i++) {
 		var tmpObj = arr[i-1];
-		$('#brandw'+i).html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
-		if (tmpObj[0] == FAKE_TAG)
-			$('#brandw'+i).css('color','#0065DD');
-		else
-			$('#brandw'+i).css('color','#5EA9DD');
+		if (tmpObj) {
+			$('#brandw'+i).html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
+			if (tmpObj[0] == FAKE_TAG)
+				$('#brandw'+i).css('color','#0065DD');
+			else
+				$('#brandw'+i).css('color','#5EA9DD');
+			
+			$('#brandw'+i+"-det").html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
+			if (tmpObj[0] == FAKE_TAG)
+				$('#brandw'+i+"-det").css('color','#0065DD');
+			else
+				$('#brandw'+i+"-det").css('color','#5EA9DD');
+		} else {
+			$('#brandw'+i).html("");
+			$('#brandw'+i+"-det").html("");
+		}
 		
-		$('#brandw'+i+"-det").html(tmpObj[0]+" ("+parseInt(tmpObj[1].toFixed(2)*100)+"%)");
-		if (tmpObj[0] == FAKE_TAG)
-			$('#brandw'+i+"-det").css('color','#0065DD');
-		else
-			$('#brandw'+i+"-det").css('color','#5EA9DD');
 	}
 	brandWarArr = [];
 }
 
-function drawBasic(dataArray) {
+function drawBasic(dataArray, div) {
 
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'X');
-    data.addColumn('number', 'Popularity, based on recent tweets');
+    data.addColumn('number', 'Sentiment, based on recent tweets');
 
     data.addRows(dataArray);
 
@@ -354,13 +366,26 @@ function drawBasic(dataArray) {
         title: 'Recent tweets'
       },
       vAxis: {
-        title: 'Popularity (%)'
+        title: 'Sentiment (%)'
       },
       legend: { position: 'bottom' },
       
     };
+    var chart = new google.visualization.LineChart(document.getElementById(div));
 
-    var chart = new google.visualization.LineChart(document.getElementById('chart_sentiment'));
+    chart.draw(data, options);
+  }
+
+function drawPie(dataArray, div) {
+
+    var data = new google.visualization.DataTable();
+    //data.addRows(dataArray);
+    var data = google.visualization.arrayToDataTable(dataArray);
+
+    var options = {
+    };
+    
+    var chart = new google.visualization.PieChart(document.getElementById(div));
 
     chart.draw(data, options);
   }
