@@ -56,7 +56,7 @@ class SentimentServlet extends HttpServlet {
 	private String username = "0b78b26b-8a5c-4076-bfa7-fa0a595b98ad";
 	private String password = "XNzv9gKrvl";
 	
-	private static String alchemyKey = "4202c06ba325660310662c0489eb61df79e9740b";
+	private static String alchemyKey = "8176235156ba22f3fbf93e61b686f28793dc42f8";
 
 	protected static Object[][] chunkArray(Object[] array, int chunkSize) {
         int numOfChunks = (int)Math.ceil((double)array.length / chunkSize);
